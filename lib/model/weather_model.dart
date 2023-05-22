@@ -1,71 +1,62 @@
-import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
-import 'package:iconify_flutter/icons/wi.dart';
-
 class WeatherModel {
-  final Widget icon;
+  final int id;
+
   final String temperature;
-  final String weekday;
-  final String numericValue;
+  final DateTime dateTime;
+  final String networkImage;
+  final String weatherType;
 
   WeatherModel(
-      {required this.icon,
+      {required this.id,
+      required this.networkImage,
       required this.temperature,
-      required this.weekday,
-      required this.numericValue});
+      required this.dateTime,
+      required this.weatherType});
 }
 
 List<WeatherModel> weatherList = [
   WeatherModel(
-      icon: const Iconify(MaterialSymbols.clear_day_rounded),
-      temperature: '26\u2103',
-      weekday: 'Sunday',
-      numericValue: '10:00'),
+    id: 1,
+    networkImage:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtLVyuZjyvYjumLJLSLVeCuQf0uxiAjbNX5c-JGr10dA&s',
+    temperature: '27 \u2103',
+    dateTime: DateTime(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day, 08, 55),
+    weatherType: 'Thunderstorm',
+  ),
   WeatherModel(
-      icon: const Iconify(MaterialSymbols.weather_snowy_outline),
-      temperature: '-5\u2103',
-      weekday: 'Monday',
-      numericValue: '12:10'),
+    id: 2,
+    networkImage:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFBDhvq6beDSOg19H8UQV2l30Im9_OE6y--59EuEeb6Q&s',
+    temperature: '9 \u2103',
+    dateTime: DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day + 1, 12, 12),
+    weatherType: 'Sunny',
+  ),
   WeatherModel(
-      icon: const Iconify(Wi.day_cloudy_windy),
-      temperature: '12\u2103',
-      weekday: 'Tuesday',
-      numericValue: '13:10'),
+    id: 3,
+    networkImage:
+        'https://freepngimg.com/thumb/weather/23648-2-weather-picture-thumb.png',
+    temperature: '-10 \u2103',
+    dateTime: DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day + 2, 16, 30),
+    weatherType: 'Rainy',
+  ),
   WeatherModel(
-      icon: const Iconify(Mdi.weather_windy),
-      temperature: '15\u2103',
-      weekday: 'Wednesday',
-      numericValue: '10:00'),
+    id: 4,
+    networkImage:
+        'https://freepngimg.com/thumb/weather/23722-3-weather-image-thumb.png',
+    temperature: '1 \u2103',
+    dateTime: DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day + 3, 21, 33),
+    weatherType: 'Snow Fall',
+  ),
   WeatherModel(
-      icon: const Iconify(MaterialSymbols.humidity_high),
-      temperature: '20\u2103',
-      weekday: 'Thursday',
-      numericValue: '99:99'),
-  WeatherModel(
-      icon: const Iconify(MaterialSymbols.weather_snowy_outline),
-      temperature: '-5\u2103',
-      weekday: 'Monday',
-      numericValue: '12:10'),
-  WeatherModel(
-      icon: const Iconify(MaterialSymbols.clear_day_rounded),
-      temperature: '26\u2103',
-      weekday: 'Sunday',
-      numericValue: '10:00'),
-  WeatherModel(
-      icon: const Iconify(MaterialSymbols.clear_day_rounded),
-      temperature: '26\u2103',
-      weekday: 'Sunday',
-      numericValue: '10:00'),
-  WeatherModel(
-      icon: const Iconify(MaterialSymbols.clear_day_rounded),
-      temperature: '26\u2103',
-      weekday: 'Sunday',
-      numericValue: '10:00'),
-  WeatherModel(
-      icon: const Iconify(MaterialSymbols.clear_day_rounded),
-      temperature: '26\u2103',
-      weekday: 'Sunday',
-      numericValue: '10:00'),
+    id: 5,
+    networkImage: 'https://freepngimg.com/thumb/categories/2275.png',
+    temperature: '42 \u2103',
+    dateTime: DateTime(DateTime.now().year, DateTime.now().month,
+        DateTime.now().day + 4, 23, 23),
+    weatherType: 'Windy',
+  ),
 ];

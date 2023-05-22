@@ -1,50 +1,56 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/model/weather_model.dart';
 
 import '../config/asset_images.dart';
 import '../config/custom_textstyles.dart';
 
 class HomepageWidgets {
-  SliverAppBar createSliverAppbar() {
+  SliverAppBar createSliverAppbar(
+      {Icon? icon, String? title, Widget? leading, Widget? action}) {
     return SliverAppBar(
-        // its an appbar but has more properties
-        pinned: true, // appbar adkaidincha
+      // its an appbar but has more properties
+      // snap: true,
+      // floating: true, // appbar adkaidincha
+      elevation: 0,
+      pinned: true,
+      shadowColor: Colors.transparent,
+      title: RichText(
+          text: WidgetSpan(
+              child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 5,
+        // row and column duitai ko property access garna milcha
+        children: [
+          icon ??
+              const Icon(
+                Icons.pin_drop_outlined,
+                color: Colors.white,
+              ),
+          Text(title ?? 'Kathmandu')
+        ],
+      ))),
+      leading: leading ??
+          Builder(builder: (context) {
+            return InkWell(
+              onTap: () {
+                print('pressed on tap ');
 
-        title: RichText(
-            text: WidgetSpan(
-                child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 5,
-          // row and column duitai ko property access garna milcha
-          children: const [
-            Icon(
-              Icons.pin_drop_outlined,
-              color: Colors.white,
-            ),
-            Text('Kathmandu')
-          ],
-        ))),
-        leading: Builder(builder: (context) {
-          return InkWell(
-            onTap: () {
-              print('pressed on tap ');
-
-              Scaffold.of(context).openDrawer();
-            },
-            child: const Iconify(
-              Bx.menu_alt_left,
-              color: Colors.white,
-            ),
-          );
-        }));
+                Scaffold.of(context).openDrawer();
+              },
+              child: const Iconify(
+                Bx.menu_alt_left,
+                color: Colors.white,
+              ),
+            );
+          }),
+      actions: [action ?? const SizedBox()],
+    );
   }
 
-  Container createCustomContainer() {
-    DateTime todaysDate = DateTime.now();
-
+  Container createCustomContainer({required WeatherModel model}) {
     return Container(
       padding: const EdgeInsets.fromLTRB(23, 0, 23, 50),
       width: double.infinity,
@@ -66,12 +72,11 @@ class HomepageWidgets {
           const SizedBox(
             height: 40,
           ),
-          CachedNetworkImage(
+          Image.network(
+            model.networkImage,
             height: 200,
             width: 200,
-            imageUrl:
-                'https://thumbs.dreamstime.com/b/rain-cloud-icon-isolated-white-background-vector-illustration-web-site-design-app-weather-eps-rain-cloud-icon-isolated-131712856.jpg',
-            imageBuilder: (context, imageProvider) {
+            errorBuilder: (context, error, stackTrace) {
               return Image.asset(
                 AssetPath.logo,
                 height: 200,
@@ -83,7 +88,7 @@ class HomepageWidgets {
             height: 15,
           ),
           Text(
-            '21 \u2103',
+            model.temperature,
             style: CustomTextStyles.largeTextStyle(
                 fontSize: 55, textDecoration: TextDecoration.none),
           ),
@@ -91,7 +96,7 @@ class HomepageWidgets {
             height: 5,
           ),
           Text(
-            'Thunderstorm',
+            model.weatherType,
             style: CustomTextStyles.largeTextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w400,
@@ -101,41 +106,52 @@ class HomepageWidgets {
             height: 5,
           ),
           Text(
-            DateFormat('EEEE, dd MMM').format(todaysDate),
+            DateFormat('EEEE, dd MMM').format(model.dateTime),
             style:
                 // Theme.of(context).textTheme.labelSmall,
 
                 CustomTextStyles.largeTextStyle(
                     fontSize: 14, fontWeight: FontWeight.w300),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Divider(
-            color: Colors.white,
-            indent: 30,
-            endIndent: 30,
-            // thickness: 1,
-            // height: .75,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              createCustomIconAndText(
-                  iconData: Icons.wind_power, text: '13 km/h', type: 'Windy'),
-              createCustomIconAndText(
-                  iconData: Icons.cloud, text: '19 \u2103', type: 'Humid'),
-              createCustomIconAndText(
-                  iconData: Icons.ac_unit_sharp,
-                  text: '-10 \u2103',
-                  type: 'Snowy'),
-            ],
-          ),
+          createDividerAndRowOfIconAndText(),
         ],
       ),
+    );
+  }
+
+  Widget createDividerAndRowOfIconAndText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        const Divider(
+          color: Colors.white,
+          thickness: 0.15,
+          // height: .25,
+          indent: 10,
+          endIndent: 10,
+          // thickness: 1,
+          // height: .75,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            createCustomIconAndText(
+                iconData: Icons.wind_power, text: '13 km/h', type: 'Windy'),
+            createCustomIconAndText(
+                iconData: Icons.cloud, text: '19 \u2103', type: 'Humid'),
+            createCustomIconAndText(
+                iconData: Icons.ac_unit_sharp,
+                text: '-10 \u2103',
+                type: 'Snowy'),
+          ],
+        ),
+      ],
     );
   }
 
