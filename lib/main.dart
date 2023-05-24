@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/screens/landing_page/splash_screen.dart';
 
-import 'screens/home_page.dart';
 import 'package:device_preview/device_preview.dart';
 
 void main() {
@@ -22,13 +22,13 @@ class MyApp extends StatelessWidget {
           size: 32,
         ),
         appBarTheme: const AppBarTheme(
-            centerTitle: true,
-            titleTextStyle: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.w600)),
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        fontFamily: 'Montserrat Alternates',
       ),
-      home: HomePage(),
+      home: const SplashScreen(),
     );
   }
 }
