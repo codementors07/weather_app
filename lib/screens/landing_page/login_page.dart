@@ -83,21 +83,23 @@ class _LoginPageState extends State<LoginPage> {
                           height: 30,
                         ),
                         TextField(
+                          obscureText: true,
                           controller: _passwordController,
                           decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Colors.blue)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      const BorderSide(color: Colors.grey)),
-                              hintText: 'Enter your password',
-                              prefixIcon: Icon(
-                                Icons.lock,
-                                color: Colors.grey.shade500,
-                              )),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Colors.blue)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey)),
+                            hintText: 'Enter your password',
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
                           keyboardType: TextInputType.name,
                           textInputAction: TextInputAction.done,
                         ),

@@ -4,6 +4,8 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
 
+  //make same as login
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
