@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/screens/landing_page/splash_screen.dart';
 
-import 'package:device_preview/device_preview.dart';
-
 void main() {
-  runApp(DevicePreview(builder: (context) => const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,7 +24,7 @@ class MyApp extends StatelessWidget {
           titleTextStyle: TextStyle(
               fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
         ),
-        fontFamily: 'Montserrat Alternates',
+        fontFamily: 'MontserratAlternates',
       ),
       home: const SplashScreen(),
     );

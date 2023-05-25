@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/config/asset_images.dart';
 import 'package:weather_app/config/custom_textstyles.dart';
 import '../../model/onboarding_model.dart';
+import 'login_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -106,7 +107,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue.shade800),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => const LoginPage()));
+                              },
                               child: Text(
                                 'Get Started',
                                 style: CustomTextStyles.semilargeTextStyle(

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
 class CustomTextStyles {
-  static TextStyle customTextStyle(
-      {required double fontSize,
-      required FontWeight fontWeight,
-      required Color textColor,
-      TextDecoration? textDecoration}) {
+  static TextStyle customTextStyle({
+    required double fontSize,
+    required FontWeight fontWeight,
+    required Color textColor,
+    TextDecoration? textDecoration,
+    String? fontFamily,
+  }) {
     return TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: textColor,
-        decoration: textDecoration);
+        decoration: textDecoration,
+        fontFamily: fontFamily ?? 'MontserratAlternates');
   }
 
   static TextStyle largeTextStyle(
