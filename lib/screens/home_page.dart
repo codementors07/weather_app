@@ -6,6 +6,7 @@ import '../model/weather_model.dart';
 import '../widget/custom_drawer_widget.dart';
 
 import '../widget/home_page_widgets.dart';
+import 'api_page.dart';
 import 'description_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,7 +28,18 @@ class _HomePageState extends State<HomePage> {
       drawer: const CustomDrawerWidget(),
       body: CustomScrollView(
         slivers: [
-          homepageWidgets.createSliverAppbar(),
+          homepageWidgets.createSliverAppbar(
+              action: InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => ApiPage()));
+            },
+            child: const Icon(
+              Icons.skip_next,
+              color: Colors.white,
+              size: 44,
+            ),
+          )),
           SliverList(
               delegate: SliverChildListDelegate([
             // if (index != null)
