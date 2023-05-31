@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/bx.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/model/weather_model.dart';
+import 'package:weather_app/model/weather_model_new.dart';
 
 import '../config/asset_images.dart';
 import '../config/custom_textstyles.dart';
@@ -29,7 +29,7 @@ class HomepageWidgets {
                 Icons.pin_drop_outlined,
                 color: Colors.white,
               ),
-          Text(title ?? 'Kathmandu')
+          Text(title ?? '')
         ],
       ))),
       leading: leading ??
@@ -50,7 +50,8 @@ class HomepageWidgets {
     );
   }
 
-  Container createCustomContainer({required WeatherModel model}) {
+  Container createCustomContainer(
+      {required WeatherModelNew? model, required int index}) {
     return Container(
       padding: const EdgeInsets.fromLTRB(23, 0, 23, 50),
       width: double.infinity,
@@ -73,7 +74,7 @@ class HomepageWidgets {
             height: 40,
           ),
           Image.network(
-            model.networkImage,
+            'http://openweathermap.org/img/w/${model?.list?[index].weather?.first.icon}.png',
             height: 200,
             width: 200,
             errorBuilder: (context, error, stackTrace) {
@@ -88,7 +89,7 @@ class HomepageWidgets {
             height: 15,
           ),
           Text(
-            model.temperature,
+            model?.list?[index].main?.temp.toString() ?? 'null data',
             style: CustomTextStyles.largeTextStyle(
                 fontSize: 55, textDecoration: TextDecoration.none),
           ),
@@ -96,7 +97,7 @@ class HomepageWidgets {
             height: 5,
           ),
           Text(
-            model.weatherType,
+            model?.list?[index].weather?.first.main ?? 'Sunny',
             style: CustomTextStyles.largeTextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w400,
@@ -106,20 +107,22 @@ class HomepageWidgets {
             height: 5,
           ),
           Text(
-            DateFormat('EEEE, dd MMM').format(model.dateTime),
+            DateFormat('EEEE, dd MMM').format(DateTime.parse(
+                model?.list?[index].dtTxt ?? DateTime.now().toString())),
             style:
                 // Theme.of(context).textTheme.labelSmall,
 
                 CustomTextStyles.largeTextStyle(
                     fontSize: 14, fontWeight: FontWeight.w300),
           ),
-          createDividerAndRowOfIconAndText(),
+          createDividerAndRowOfIconAndText(weatherModel: model, index: index),
         ],
       ),
     );
   }
 
-  Widget createDividerAndRowOfIconAndText() {
+  Widget createDividerAndRowOfIconAndText(
+      {required WeatherModelNew? weatherModel, required int index}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -142,13 +145,17 @@ class HomepageWidgets {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             createCustomIconAndText(
-                iconData: Icons.wind_power, text: '13 km/h', type: 'Windy'),
+                iconData: Icons.wind_power,
+                text: '${weatherModel?.list?[index].wind?.speed} km/h',
+                type: 'Windy'),
             createCustomIconAndText(
-                iconData: Icons.cloud, text: '19 \u2103', type: 'Humid'),
+                iconData: Icons.water_drop_outlined,
+                text: '${weatherModel?.list?[index].main?.humidity} \u2103',
+                type: 'Humid'),
             createCustomIconAndText(
-                iconData: Icons.ac_unit_sharp,
-                text: '-10 \u2103',
-                type: 'Snowy'),
+                iconData: Icons.cloud,
+                text: '${weatherModel?.list?[index].clouds?.all} ',
+                type: 'Cloudy'),
           ],
         ),
       ],

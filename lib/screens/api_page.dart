@@ -63,26 +63,87 @@ class _ApiPageState extends State<ApiPage> {
         body: SafeArea(
       child: SingleChildScrollView(
         child: Column(children: [
-          mainPostsList.isEmpty
-              ? const Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  shrinkWrap: true,
-                  primary: false,
-                  itemCount: mainPostsList.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Text(mainPostsList[index].id.toString()),
-                        Text(mainPostsList[index].title.toString()),
-                        Text(mainPostsList[index].body.toString()),
-                        const Divider(
-                          height: 2,
-                          thickness: 2,
-                          color: Colors.black,
-                        )
-                      ],
-                    );
-                  })
+          Table(
+            children: [
+              const TableRow(children: [
+                Text('Id'),
+                Text('Title'),
+                Text('Body'),
+              ]),
+              TableRow(children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        primary: false,
+                        itemCount: mainPostsList.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(mainPostsList[index].id.toString()),
+                              // Text(mainPostsList[index].title.toString()),
+                              // Text(mainPostsList[index].body.toString()),
+                            ],
+                          );
+                        })
+                  ],
+                ),
+                ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: mainPostsList.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Text(mainPostsList[index].id.toString()),
+                          Text(mainPostsList[index].title.toString()),
+                          // Text(mainPostsList[index].body.toString()),
+                        ],
+                      );
+                    }),
+                ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    primary: false,
+                    itemCount: mainPostsList.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Text(mainPostsList[index].id.toString()),
+                          // Text(mainPostsList[index].title.toString()),
+                          Text(mainPostsList[index].body.toString()),
+                        ],
+                      );
+                    }),
+              ])
+            ],
+          ),
+          // mainPostsList.isEmpty
+          //     ? const Center(child: CircularProgressIndicator())
+          // : ListView.builder(
+          //     shrinkWrap: true,
+          //     primary: false,
+          //     itemCount: mainPostsList.length,
+          //     itemBuilder: (context, index) {
+          //       return Column(
+          //         children: [
+          //           Text(mainPostsList[index].id.toString()),
+          //           Text(mainPostsList[index].title.toString()),
+          //           Text(mainPostsList[index].body.toString()),
+          //           const Divider(
+          //             height: 2,
+          //             thickness: 2,
+          //             color: Colors.black,
+          //           )
+          //         ],
+          //       );
+          //     })
         ]),
       ),
     ));

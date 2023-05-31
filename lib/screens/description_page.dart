@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/config/custom_textstyles.dart';
-import 'package:weather_app/model/weather_model.dart';
 import 'package:weather_app/widget/home_page_widgets.dart';
 
-class DescriptionPage extends StatelessWidget {
-  const DescriptionPage({super.key, required this.weatherModel});
+import '../model/weather_model_new.dart';
 
-  final WeatherModel weatherModel;
+class DescriptionPage extends StatelessWidget {
+  const DescriptionPage(
+      {super.key, required this.weatherModel, required this.index});
+
+  final WeatherModelNew? weatherModel;
+  final int index;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,9 +59,11 @@ class DescriptionPage extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  headerPart(weatherModel),
+                                  headerPart(weatherModel, index),
                                   HomepageWidgets()
-                                      .createDividerAndRowOfIconAndText(),
+                                      .createDividerAndRowOfIconAndText(
+                                          weatherModel: weatherModel,
+                                          index: index),
                                 ],
                               )),
                           const SizedBox(
@@ -69,9 +74,9 @@ class DescriptionPage extends StatelessWidget {
                                   horizontal: 23, vertical: 20),
                               shrinkWrap: true,
                               primary: false,
-                              itemCount: weatherList.length,
+                              itemCount: weatherModel?.list?.length,
                               itemBuilder: (context, index) {
-                                var weatherDatas = weatherList[index];
+                                var weatherDatas = weatherModel?.list?[index];
 
                                 return Row(
                                   mainAxisAlignment:
@@ -80,7 +85,8 @@ class DescriptionPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       DateFormat('EEE').format(
-                                        weatherDatas.dateTime,
+                                        DateTime.parse(weatherDatas?.dtTxt ??
+                                            DateTime.now().toString()),
                                       ),
                                       style:
                                           CustomTextStyles.semilargeTextStyle(
@@ -93,7 +99,7 @@ class DescriptionPage extends StatelessWidget {
                                           WrapCrossAlignment.start,
                                       children: [
                                         Image.network(
-                                          weatherDatas.networkImage,
+                                          'http://openweathermap.org/img/w/${weatherDatas?.weather?.first.icon}.png',
                                           height: 50,
                                           width: 50,
                                         ),
@@ -101,7 +107,8 @@ class DescriptionPage extends StatelessWidget {
                                           width: 5,
                                         ),
                                         Text(
-                                          weatherDatas.weatherType,
+                                          weatherDatas?.weather?.first.main ??
+                                              'Sunny',
                                           style: CustomTextStyles
                                               .semilargeTextStyle(
                                                   fontSize: 18,
@@ -112,7 +119,8 @@ class DescriptionPage extends StatelessWidget {
                                       ],
                                     ),
                                     Text(
-                                      weatherDatas.temperature,
+                                      weatherDatas?.main?.temp.toString() ??
+                                          '88',
                                       style:
                                           CustomTextStyles.semilargeTextStyle(
                                               fontSize: 18,
@@ -130,7 +138,7 @@ class DescriptionPage extends StatelessWidget {
     );
   }
 
-  Widget headerPart(WeatherModel weatherModel) {
+  Widget headerPart(WeatherModelNew? weatherModel, int index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -140,36 +148,38 @@ class DescriptionPage extends StatelessWidget {
         Row(
           children: [
             Image.network(
-              weatherModel.networkImage,
+              'http://openweathermap.org/img/w/${weatherModel?.list?[index].weather?.first.icon}.png',
               height: 150,
               width: 150,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Tomorrow',
-                  style: CustomTextStyles.largeTextStyle(),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  weatherModel.temperature,
-                  style: CustomTextStyles.customTextStyle(
-                      fontSize: 64,
-                      fontWeight: FontWeight.bold,
-                      textColor: Colors.white),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  weatherModel.weatherType,
-                  style: CustomTextStyles.semilargeTextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w300),
-                )
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tomorrow',
+                    style: CustomTextStyles.largeTextStyle(),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    weatherModel?.list?[index].main?.temp.toString() ?? '76',
+                    style: CustomTextStyles.customTextStyle(
+                        fontSize: 54,
+                        fontWeight: FontWeight.bold,
+                        textColor: Colors.white),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    weatherModel?.list?[index].weather?.first.main ?? 'sunny',
+                    style: CustomTextStyles.semilargeTextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w300),
+                  )
+                ],
+              ),
             )
           ],
         ),
