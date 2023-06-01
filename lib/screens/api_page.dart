@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +45,19 @@ class _ApiPageState extends State<ApiPage> {
     }
   }
 
+  Future<PostsModel?> getPostsDetail({required int id}) async {
+    try {
+      final response = await dio.get('$mainUrl$endpoint/$id'); //setting up url.
+
+      log('${response.data}');
+
+      return PostsModel.fromJson(response.data);
+    } catch (e) {
+      print(e.toString());
+      throw Exception(e.toString());
+    }
+  }
+
   Future fetchPostListFromApi() async {
     final allPostsData = await getPostsList();
 
@@ -63,89 +78,251 @@ class _ApiPageState extends State<ApiPage> {
         body: SafeArea(
       child: SingleChildScrollView(
         child: Column(children: [
-          Table(
-            children: [
-              const TableRow(children: [
-                Text('Id'),
-                Text('Title'),
-                Text('Body'),
-              ]),
-              TableRow(children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        primary: false,
-                        itemCount: mainPostsList.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(mainPostsList[index].id.toString()),
-                              // Text(mainPostsList[index].title.toString()),
-                              // Text(mainPostsList[index].body.toString()),
-                            ],
-                          );
-                        })
-                  ],
-                ),
-                ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    primary: false,
-                    itemCount: mainPostsList.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Text(mainPostsList[index].id.toString()),
-                          Text(mainPostsList[index].title.toString()),
-                          // Text(mainPostsList[index].body.toString()),
-                        ],
-                      );
-                    }),
-                ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    primary: false,
-                    itemCount: mainPostsList.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Text(mainPostsList[index].id.toString()),
-                          // Text(mainPostsList[index].title.toString()),
-                          Text(mainPostsList[index].body.toString()),
-                        ],
-                      );
-                    }),
-              ])
-            ],
-          ),
-          // mainPostsList.isEmpty
-          //     ? const Center(child: CircularProgressIndicator())
-          // : ListView.builder(
-          //     shrinkWrap: true,
-          //     primary: false,
-          //     itemCount: mainPostsList.length,
-          //     itemBuilder: (context, index) {
-          //       return Column(
-          //         children: [
-          //           Text(mainPostsList[index].id.toString()),
-          //           Text(mainPostsList[index].title.toString()),
-          //           Text(mainPostsList[index].body.toString()),
-          //           const Divider(
-          //             height: 2,
-          //             thickness: 2,
-          //             color: Colors.black,
-          //           )
-          //         ],
-          //       );
-          //     })
+          ListView.builder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              primary: false,
+              itemCount: mainPostsList.length,
+              itemBuilder: (context, index) {
+                var postsData = mainPostsList[index];
+
+                return InkWell(
+                  onTap: () {
+                    index == 31
+                        ? getBottomsheet(context, postsData)
+                        : (index % 2 == 0
+                            ? getDialog(context, postsData)
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => PostsDetail(
+                                          postsModel: postsData,
+                                        ))));
+                    print(postsData.id);
+                  },
+                  child: ContainerDatas(postsData: postsData),
+                );
+              }),
         ]),
       ),
     ));
+  }
+
+  Future<dynamic> getBottomsheet(BuildContext context, PostsModel postsData) {
+    return showModalBottomSheet(
+        isDismissible: false,
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+            child: InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Id :- ${postsData.id}',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Title :- ${postsData.title}',
+                    style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.normal),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Body :- ${postsData.body}',
+                    style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<dynamic> getDialog(BuildContext context, PostsModel postsData) {
+    return showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Posts Detail',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.clear,
+                      color: Colors.black,
+                      size: 18,
+                    ))
+              ],
+            ),
+            titlePadding: const EdgeInsets.symmetric(horizontal: 15),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Title :- ${postsData.title}',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.normal),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Body :- ${postsData.body}',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+}
+
+class ContainerDatas extends StatelessWidget {
+  const ContainerDatas({
+    super.key,
+    required this.postsData,
+  });
+
+  final PostsModel postsData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 7.5, vertical: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Id :- ${postsData.id}',
+              style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Title :- ${postsData.title}',
+              style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.normal),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Body :- ${postsData.body}',
+              style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w400),
+            ),
+          ],
+        ));
+  }
+}
+
+class PostsDetail extends StatelessWidget {
+  const PostsDetail({
+    super.key,
+    required this.postsModel,
+  });
+
+  final PostsModel postsModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 7.5, vertical: 5),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey.shade300)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Id :- ${postsModel.id}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Title :- ${postsModel.title}',
+                      style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Body :- ${postsModel.body}',
+                      style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                )),
+          ],
+        ),
+      ),
+    );
   }
 }

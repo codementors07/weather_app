@@ -15,6 +15,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -49,21 +51,58 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Login',
-                          style: CustomTextStyles.largeTextStyle(
-                            textColor: Colors.black,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Login',
+                            style: CustomTextStyles.largeTextStyle(
+                              textColor: Colors.black,
+                            ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.blue)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey)),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.red)),
+                                hintText: 'Enter your email',
+                                prefixIcon: Icon(
+                                  Icons.email_outlined,
+                                  color: Colors.grey.shade500,
+                                )),
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'This is required';
+                              } else if (!value.contains('@')) {
+                                return 'Enter proper email';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          TextFormField(
+                            obscureText: true,
+                            controller: _passwordController,
+                            decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
@@ -72,106 +111,101 @@ class _LoginPageState extends State<LoginPage> {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       const BorderSide(color: Colors.grey)),
-                              hintText: 'Enter your email',
+                              errorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red)),
+                              hintText: 'Enter your password',
                               prefixIcon: Icon(
-                                Icons.email_outlined,
+                                Icons.lock,
                                 color: Colors.grey.shade500,
-                              )),
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextField(
-                          obscureText: true,
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    const BorderSide(color: Colors.blue)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey)),
-                            hintText: 'Enter your password',
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Colors.grey.shade500,
+                              ),
                             ),
+                            keyboardType: TextInputType.name,
+                            textInputAction: TextInputAction.done,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'This is required';
+                              } else if (value.length < 8) {
+                                return 'Password is too short';
+                              }
+                              return null;
+                            },
                           ),
-                          keyboardType: TextInputType.name,
-                          textInputAction: TextInputAction.done,
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {},
-                              splashColor: Colors.blue.shade800,
-                              child: Container(
-                                  alignment: Alignment.center,
-                                  height: 35,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue.shade400,
-                                      borderRadius: BorderRadius.circular(30)),
-                                  child: const Text(
-                                    'Login',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18,
-                                        letterSpacing: .5),
-                                  )),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Forgot Password?',
-                                style: TextStyle(
-                                  color: Colors.blue.shade700,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w600,
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    print('validated');
+                                  }
+                                },
+                                splashColor: Colors.blue.shade800,
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    height: 35,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        color: Colors.blue.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
+                                    child: const Text(
+                                      'Login',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                          letterSpacing: .5),
+                                    )),
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  'Forgot Password?',
+                                  style: TextStyle(
+                                    color: Colors.blue.shade700,
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Don\'t have an account?  ',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignupPage()));
-                              },
-                              child: Text(
-                                'Sign up',
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Don\'t have an account?  ',
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.blue.shade700,
+                                    color: Colors.black54,
                                     fontWeight: FontWeight.w600),
                               ),
-                            ),
-                          ],
-                        )
-                      ],
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SignupPage()));
+                                },
+                                child: Text(
+                                  'Sign up',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.blue.shade700,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
